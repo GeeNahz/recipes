@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from ninja import Router
 from ninja.responses import codes_4xx, codes_2xx
 from ninja_jwt.tokens import RefreshToken
+from ninja_jwt.routers.obtain import obtain_pair_router
+from ninja_jwt.routers.blacklist import blacklist_router
 
 from apps.authentication.schemas import RegisterIn, RegisterOut
 from apps.utils import AUTH_PROVIDERS, MessageSchema, Util
@@ -21,20 +23,23 @@ User = get_user_model()
 router = Router()
 
 
-@router.post('/login/', response={
-    200: LoginOut,
-    400: MessageSchema
-})
-def login(request, credentials: LoginIn):
-    payload = credentials.dict()
-    user = authenticate(
-        username=payload['username'], password=payload['password'])
+# @router.post('/login/', response={
+#     200: LoginOut,
+#     400: MessageSchema
+# })
+# def login(request, credentials: LoginIn):
+#     payload = credentials.dict()
+#     user = authenticate(
+#         username=payload['username'], password=payload['password'])
+#
+#     if user is not None:
+#         user_tokens = user.tokens()
+#         return 200, user_tokens
+#
+#     return 400, {'message': 'Username or password is incorrect'}
 
-    if user is not None:
-        user_tokens = user.tokens()
-        return 200, user_tokens
-
-    return 400, {'message': 'Username or password is incorrect'}
+router.add_router('', tags=['Auth'], router=obtain_pair_router)
+router.add_router('', tags=['Auth'], router=blacklist_router)
 
 
 @router.get('/verify-email/', url_name='verify_email', response={
