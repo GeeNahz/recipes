@@ -5,16 +5,15 @@ from .models import Profile, User
 class UserOut(ModelSchema):
     class Meta:
         model = User
-        exclude = ['password', 'last_login', 'is_superuser', 'is_staff',
-                   'is_verified', 'groups', 'user_permissions']
+        exclude = ['password', 'date_joined', 'last_login', 'is_superuser',
+                   'is_staff', 'is_verified', 'groups', 'user_permissions']
 
 
 class UserIn(ModelSchema):
-    # password_confirm: str
-
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password']
+        fields = ['first_name', 'last_name']
+        fields_optional = '__all__'
 
 
 class ProfileOut(ModelSchema):
