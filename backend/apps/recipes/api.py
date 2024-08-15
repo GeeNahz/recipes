@@ -14,17 +14,21 @@ from .schemas import RecipeOut, RecipeIn
 router = Router(auth=JWTAuth())
 
 
+# Create recipe (is_authenticated)
+# List recipes (annon)
 @router.get('/', response=List[RecipeOut])
 def list_users(request):
     return Recipe.objects.all()
 
 
+# Get recipe (annon)
 @router.get('/me', response={200: RecipeOut, 401: MessageSchema})
 def get_user(request):
     user = request.user
     return user
 
 
+# Update recipe [patch] (is_authenticated, recipe owner)
 @router.patch('/{user_id}', response={200: RecipeOut, 401: MessageSchema})
 def update_users(request, user_id: str, data: UserIn):
     user = get_object_or_404(User, pk=user_id)
@@ -36,3 +40,4 @@ def update_users(request, user_id: str, data: UserIn):
     user.save()
 
     return user
+# Delete recipe (is_authenticated, recipe owner)
