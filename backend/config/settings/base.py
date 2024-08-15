@@ -2,6 +2,8 @@ import datetime
 from pathlib import Path
 from decouple import config
 
+from corsheaders.defaults import default_headers, default_methods
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -41,6 +43,20 @@ INSTALLED_APPS = (
     + THIRD_PARTY_APPS
 )
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:4000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:4000",
+]
+
+CORS_ALLOW_METHODS = (
+    *default_methods,
+)
+
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+)
 
 ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=30)
 REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=7)
