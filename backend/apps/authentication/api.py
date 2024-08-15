@@ -3,7 +3,7 @@ from typing import Optional
 from decouple import config
 from django.shortcuts import redirect
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy
 from ninja import Router
@@ -15,14 +15,13 @@ from ninja_jwt.routers.blacklist import blacklist_router
 from apps.authentication.schemas import RegisterIn, RegisterOut
 from apps.utils import AUTH_PROVIDERS, MessageSchema, Util
 
-from .schemas import LoginOut, LoginIn
-
 
 User = get_user_model()
 
 router = Router()
 
 
+# from .schemas import LoginOut, LoginIn
 # @router.post('/login/', response={
 #     200: LoginOut,
 #     400: MessageSchema
@@ -42,7 +41,7 @@ router.add_router('', tags=['Auth'], router=obtain_pair_router)
 router.add_router('', tags=['Auth'], router=blacklist_router)
 
 
-@router.get('/verify-email/', url_name='verify_email', response={
+@router.get('/verify-email', url_name='verify_email', response={
     codes_2xx: None,
     codes_4xx: MessageSchema,
 })
@@ -68,8 +67,20 @@ def verify_email(request, token: Optional[str] = None):
         return 400, {"message": "Invalid activation link."}
 
 
-@router.post('/register/', response=RegisterOut)
+@router.post('/register', response={
+    # set 200 status code to be able to capture the
+    # correct error message on the frontend
+    200: MessageSchema,
+    201: RegisterOut,
+    400: MessageSchema,
+})
 def register(request, data: RegisterIn):
+    if User.objects.filter(email=data.email).exists():
+        return 200, {'message': 'A user with this email already exists'}
+
+    if User.objects.filter(username=data.username).exists():
+        return 200, {'message': 'A user with this username already exists'}
+
     user = User.objects.create_user(
         **data.dict(), auth_provider=AUTH_PROVIDERS.get('email'))
 
@@ -86,15 +97,15 @@ def register(request, data: RegisterIn):
         "Hi " + user.username + ", use link below to verify your email.\n"
         + abs_url + '\n\n' + 'The link will expire in 30 minutes'
     )
-    data = {
+    email_data = {
         "email_body": email_body,
         "email_subject": "Verify your email",
         "to_email": user_email,
     }
     # Send verification email
-    Util.send_email(data=data)
+    Util.send_email(data=email_data)
 
-    return {
+    return 201, {
         'id': str(user.id),
         'message': 'A verification link has been sent to your email. Kindly verify your email using the link',
     }
