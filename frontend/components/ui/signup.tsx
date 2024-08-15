@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormState, useFormStatus } from "react-dom"
+import { useFormState } from "react-dom"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -8,51 +8,106 @@ import { Input } from "@/components/ui/input"
 
 import { signup } from '@/lib/actions/signup'
 import { SubmitButton } from "@/components/ui/submit-button"
+import { useToast } from "@/components/ui/use-toast"
+import useEffectAfterMount from "@/hooks/useEffectAfterMount"
+
 
 export const SignupForm = () => {
-    const [state, action] = useFormState(signup, undefined)
+  const [state, action] = useFormState(signup, undefined)
 
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Signup</CardTitle>
+  const { toast } = useToast()
+  useEffectAfterMount(() => {
+    if (state?.status === 400) {
+      // show error toast
+      toast({
+        title: 'Operation failed!',
+        description: state.message,
+        variant: 'destructive',
+      })
+    }
 
-                <CardDescription>Enter your details</CardDescription>
-            </CardHeader>
+    if (state?.status === 200) {
+      // show error toast
+      toast({
+        title: 'Conflict!',
+        description: state.message,
+        variant: 'destructive',
+      })
+    }
 
-            <form action={action}>
-                <CardContent>
-                    <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="first_name">First Name</Label>
-                            <Input id="first_name" name="first_name" placeholder="John" />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="last_name">Last Name</Label>
-                            <Input id="last_name" name="last_name" placeholder="Doe" />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" name="email" placeholder="johndoe@example.com" />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="username">Username</Label>
-                            <Input id="username" name="username" placeholder="Enter your username" />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" placeholder="********" />
-                        </div>
-                    </div>
-                </CardContent>
+    if (state?.status === 201) {
+      // show success toast
+      toast({
+        title: 'Account created!',
+        description: state.message,
+        variant: 'default',
+      })
+    }
+  }, [state])
 
-                <CardFooter>
-                    <SubmitButton
-                        value="Sign Up"
-                        loadingValue="Signing Up..."
-                    />
-                </CardFooter>
-            </form>
-        </Card>
-    )
+  return (
+    <Card>
+      <CardHeader className="w-full text-center">
+        <CardTitle>Signup</CardTitle>
+
+        <CardDescription>Enter your details to get started.</CardDescription>
+      </CardHeader>
+
+      <form action={action}>
+        <CardContent>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="first_name">First Name</Label>
+              <Input id="first_name" name="first_name" placeholder="John" />
+
+              <div className="h-1 text-xs text-destructive">
+                {state?.errors && state.errors.first_name}
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="last_name">Last Name</Label>
+              <Input id="last_name" name="last_name" placeholder="Doe" />
+
+              <div className="h-1 text-xs text-destructive">
+                {state?.errors && state.errors.last_name}
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" name="email" placeholder="johndoe@example.com" />
+
+              <div className="h-1 text-xs text-destructive">
+                {state?.errors && state.errors.email}
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="username">Username</Label>
+              <Input id="username" name="username" placeholder="Enter your username" />
+
+              <div className="h-1 text-xs text-destructive">
+                {state?.errors && state.errors.username}
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" placeholder="********" />
+
+              <div className="min-h-1 text-xs text-destructive">
+                {state?.errors && state.errors.password?.map((error, index) => (
+                  <p key={index}>- {error}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+
+        <CardFooter>
+          <SubmitButton
+            value="Sign Up"
+            loadingValue="Signing Up..."
+          />
+        </CardFooter>
+      </form>
+    </Card>
+  )
 }
