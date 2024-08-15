@@ -1,9 +1,9 @@
 from django.db.models.base import post_save
-from apps.utils import AUTH_PROVIDERS, GENDER, USER_TYPE, DefaultFields
+from apps.utils import AUTH_PROVIDERS, GENDER, DefaultFields
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django_extensions.db.models import TitleDescriptionModel
+# from django_extensions.db.models import TitleDescriptionModel
 from ninja_jwt.tokens import RefreshToken
 
 from .managers import CustomUserManager
