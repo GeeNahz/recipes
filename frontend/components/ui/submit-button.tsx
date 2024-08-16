@@ -11,7 +11,7 @@ type Props = {
 export const SubmitButton = ({ value, loadingValue }: Props) => {
     const { pending } = useFormStatus()
 
-    return <Button type="submit" disabled={pending} aria-disabled={pending}>
+    return <Button className="w-full" type="submit" disabled={pending} aria-disabled={pending}>
         {
             pending
                 ? (loadingValue ? loadingValue : value)
