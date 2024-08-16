@@ -48,7 +48,6 @@ const auth = {
   verifySession: async () => {
     const cookie = cookies().get(cookieHelper.name)?.value
     const session = await auth.decrypt(cookie)
-    console.log('SESSION: ', session)
     // if (!session?.user) {
     //   redirect('/login')
     // }
