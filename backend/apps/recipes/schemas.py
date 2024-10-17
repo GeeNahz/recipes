@@ -5,7 +5,8 @@ from .models import Recipe
 class RecipeOut(ModelSchema):
     class Meta:
         model = Recipe
-        exclude = '__all__'
+        # exclude = '__all__'
+        fields = ['name']
 
 
 class RecipeIn(ModelSchema):

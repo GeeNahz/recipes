@@ -17,27 +17,60 @@ router = Router(auth=JWTAuth())
 # Create recipe (is_authenticated)
 # List recipes (annon)
 @router.get('/', response=List[RecipeOut])
-def list_users(request):
+def list_recipes(request):
     return Recipe.objects.all()
 
 
 # Get recipe (annon)
-@router.get('/me', response={200: RecipeOut, 401: MessageSchema})
-def get_user(request):
-    user = request.user
-    return user
+@router.get('/{recipe_id}', response={200: RecipeOut, 401: MessageSchema})
+def get_user(request, recipe_id: str):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)  # get.recipe
+    return recipe
 
+
+# Create recipe (is_authenticated)
+@router.post(
+    '/', response={201: RecipeOut, 401: MessageSchema},
+    auth=JWTAuth()
+)
+def create_recipe(request, data: RecipeIn):
+    recipe = Recipe(owner=request.user, **data.dict())
+    recipe.save()
+
+    return recipe
 
 # Update recipe [patch] (is_authenticated, recipe owner)
-@router.patch('/{user_id}', response={200: RecipeOut, 401: MessageSchema})
-def update_users(request, user_id: str, data: UserIn):
-    user = get_object_or_404(User, pk=user_id)
-    if not (request.user.is_superuser or (request.user.id == user.id)):
+
+
+@router.patch(
+    '/{recipe_id}', response={200: RecipeOut, 401: MessageSchema},
+    auth=JWTAuth()
+)
+def update_recipe(request, recipe_id: str, data: RecipeIn):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    if not (request.user.is_superuser or (request.user.id == recipe.owner.id)):
         return 401, {'message': 'You do not have the required permission to perform this request.'}
 
     for attr, value in data.dict(exclude_unset=True).items():
-        setattr(user, attr, value)
-    user.save()
+        setattr(recipe, attr, value)
+    recipe.save()
 
-    return user
+    return recipe
+
+
 # Delete recipe (is_authenticated, recipe owner)
+@router.delete(
+    '/{recipe_id}', response={204: MessageSchema, 401: MessageSchema}
+)
+def delete_recipe(request, recipe_id: str, data: RecipeIn):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    if not (request.user.is_superuser or (request.user.id == recipe.owner.id)):
+        return 401, {
+            'message': 'You do not have the required permission to perform this request.'
+        }
+
+    recipe.delete()
+
+    return 204, {
+        'message': f'Recipe with id: {recipe_id} deleted successfully.'
+    }

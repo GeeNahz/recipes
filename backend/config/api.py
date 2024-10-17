@@ -2,6 +2,7 @@ from ninja import NinjaAPI, Swagger
 from ninja_extra import exceptions
 from apps.users.api import router as user_router
 from apps.authentication.api import router as auth_router
+from apps.recipes.api import router as recipes_router
 
 
 api_v1 = NinjaAPI(
@@ -16,6 +17,8 @@ api_v1.add_router(
     '/auth', tags=['Auth'], router=auth_router)
 api_v1.add_router(
     '/users', tags=['Users'], router=user_router)
+api_v1.add_router(
+    '/recipes', tags=['Recipes'], router=recipes_router)
 
 
 def api_exception_handler(request, exc):
