@@ -53,9 +53,6 @@ export type SessionPayload = {
   expiresAt: Date;
 };
 
-export const ALGORITHM = process.env.ALGORITHM as string
-export const SECRET = process.env.SECRET as string
-
 export type TSessionData = {
     tokens: {
         access: string;

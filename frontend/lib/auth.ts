@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose'
-import { ALGORITHM, SECRET, TSessionData } from '@/lib/_definitions'
+import { TSessionData } from '@/lib/_definitions'
+import { ALGORITHM, SECRET, } from '@/lib/_constants'
 import { cookies } from 'next/headers'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { decodeToken } from './utils'
