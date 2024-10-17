@@ -6,9 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /usr/src/app/backend
 
 # install system dependencies
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y libpq-dev python3-dev build-essential postgresql-server-dev-all
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y libpq-dev python3-dev build-essential postgresql-server-dev-all
 
 # install dependencies
 RUN pip install --upgrade pip
