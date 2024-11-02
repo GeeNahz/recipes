@@ -1,17 +1,7 @@
-services:
-  postgresdb:
-    container_name: postgresdb
-    image: postgres:16-bullseye
-    ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    networks:
-      - back-tier
-    env_file:
-      - ./backend/.env
-    restart: on-failure:3
+include:
+  - db.yaml
 
+services:
   api:
     container_name: backend
     build: ./backend
@@ -28,22 +18,20 @@ services:
       - ./backend/.env
     restart: always
 
-  # ui:
-  #   container_name: frontend
-  #   build: ./frontend
-  #   ports:
-  #     - '3000:3000'
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - front-tier
-  #   depends_on:
-  #     - backend
-  #   env_file:
-  #     - ./frontend/.env
-
-volumes:
-  postgres_data:
+  ui:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    volumes:
+      - ./frontend/:/usr/src/app/frontend/
+    networks:
+      - front-tier
+    env_file:
+      - ./frontend/.env
+    restart: on-failure:3
 
 networks:
   # The presence of these objects is sufficient to define them
