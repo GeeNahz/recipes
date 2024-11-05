@@ -23,8 +23,7 @@ class Category(DefaultFields, models.Model):
 
 
 def file_upload_path(instance, filename):
-    return "media/recipe/{0}/{1}/".format(
-        instance.owner.username, filename)
+    return "media/recipe/{0}/".format(filename)
 
 
 class Recipe(DefaultFields, models.Model):
