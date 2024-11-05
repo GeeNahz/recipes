@@ -1,11 +1,11 @@
 'use client'
 
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { SubmitButton } from "@/components/ui/submit-button"
+import { Button } from "@/components/ui/button"
 
 import { useToast } from "@/components/ui/use-toast"
 import useEffectAfterMount from "@/hooks/useEffectAfterMount"
@@ -13,7 +13,7 @@ import useEffectAfterMount from "@/hooks/useEffectAfterMount"
 import { login } from "@/lib/actions/login"
 
 export const LoginForm = () => {
-  const [state, action] = useFormState(login, undefined)
+  const [state, action, pending] = useActionState(login, undefined)
 
   const { toast } = useToast()
   useEffectAfterMount(() => {
@@ -65,7 +65,9 @@ export const LoginForm = () => {
         </CardContent>
 
         <CardFooter>
-          <SubmitButton value="Login" loadingValue="Logging in..." />
+          <Button className="w-full" type="submit" disabled={pending} aria-disabled={pending}>
+            {pending ? 'Logging in...' : 'Login'}
+          </Button>
         </CardFooter>
       </form>
     </Card>

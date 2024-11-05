@@ -1,9 +1,9 @@
-import {LoginForm} from '@/components/ui/login'
+import { LoginForm } from '@/components/ui/login'
 
 export default function Login() {
-    return (
-        <div>
-            <LoginForm />
-        </div>
-    )
+  return (
+    <div className="font-geist-mono">
+      <LoginForm />
+    </div>
+  )
 }

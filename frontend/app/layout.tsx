@@ -1,12 +1,20 @@
-import "@/app/globals.css";
 import type { Metadata } from "next";
+import localFont from "next/font/local";
+import "@/app/globals.css";
 import { cn } from "@/lib/utils";
-
-import { Inter } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster"
 
-const inter = Inter({ subsets: ["latin"], variable: '--font-sans', });
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
 
 export const metadata: Metadata = {
   title: "Recipes",
@@ -20,10 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(
-        'min-h-screen bg-background font-sans antialiased',
-        inter.variable
-      )}>
+      <body
+        className={`${cn('min-h-screen bg-background font-geist-mono antialiased',)}
+          ${geistSans.variable, geistMono.variable}`
+        }
+      >
         <main>{children}</main>
         <Toaster />
       </body>

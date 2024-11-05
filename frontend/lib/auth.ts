@@ -47,7 +47,7 @@ const auth = {
   },
 
   verifySession: async () => {
-    const cookie = cookies().get(cookieHelper.name)?.value
+    const cookie = (await cookies()).get(cookieHelper.name)?.value
     const session = await auth.decrypt(cookie)
     // if (!session?.user) {
     //   redirect('/login')
@@ -64,11 +64,11 @@ const auth = {
       : new Date(Date.now() + cookieHelper.duration)
     const session = await auth.encrypt({ ...userData, expires })
 
-    cookies().set(cookieHelper.name, session, { ...cookieHelper.options, expires })
+    (await cookies()).set(cookieHelper.name, session, { ...cookieHelper.options, expires })
   },
 
   deleteSession: async () => {
-    cookies().delete(cookieHelper.name)
+    (await cookies()).delete(cookieHelper.name)
     // redirect('/login') // would prefer this but server action will return an error instead
   },
 

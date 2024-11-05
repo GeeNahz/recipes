@@ -5,7 +5,7 @@ import AuthService from "@/lib/_services/auth-service"
 import { BASE_URL } from "@/lib/_constants"
 
 const userConfig = axios.create({
-  baseURL: BASE_URL,
+  baseURL: `${BASE_URL}/api/v1`,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

@@ -1,10 +1,11 @@
 'use client'
 
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 import { signup } from '@/lib/actions/signup'
 import { SubmitButton } from "@/components/ui/submit-button"
@@ -13,7 +14,7 @@ import useEffectAfterMount from "@/hooks/useEffectAfterMount"
 
 
 export const SignupForm = () => {
-  const [state, action] = useFormState(signup, undefined)
+  const [state, action, pending] = useActionState(signup, undefined)
 
   const { toast } = useToast()
   useEffectAfterMount(() => {
@@ -102,10 +103,9 @@ export const SignupForm = () => {
         </CardContent>
 
         <CardFooter>
-          <SubmitButton
-            value="Sign Up"
-            loadingValue="Signing Up..."
-          />
+          <Button className="w-full" type="submit" disabled={pending} aria-disabled={pending}>
+            {pending ? 'Signing up...' : 'Signup'}
+          </Button>
         </CardFooter>
       </form>
     </Card>
