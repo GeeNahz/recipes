@@ -1,9 +1,9 @@
-import {SignupForm} from '@/components/ui/signup'
+import { SignupForm } from '@/components/ui/signup'
 
 export default function Signup() {
-    return (
-        <div>
-            <SignupForm />
-        </div>
-    )
+  return (
+    <div>
+      <SignupForm />
+    </div>
+  )
 }
