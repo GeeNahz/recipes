@@ -11,7 +11,7 @@ from .schemas import RecipeOut, RecipeIn
 # from apps.utils import MessageSchema
 
 
-router = Router(auth=JWTAuth())
+router = Router()
 
 
 # Create recipe (is_authenticated)
@@ -42,6 +42,7 @@ def create_recipe(request, data: RecipeIn):
 # Update recipe [patch] (is_authenticated, recipe owner)
 
 
+# Delete recipe (is_authenticated, recipe owner)
 @router.patch(
     '/{recipe_id}', response={200: RecipeOut, 401: MessageSchema},
     auth=JWTAuth()
@@ -60,7 +61,8 @@ def update_recipe(request, recipe_id: str, data: RecipeIn):
 
 # Delete recipe (is_authenticated, recipe owner)
 @router.delete(
-    '/{recipe_id}', response={204: MessageSchema, 401: MessageSchema}
+    '/{recipe_id}', response={204: MessageSchema, 401: MessageSchema},
+    auth=JWTAuth(),
 )
 def delete_recipe(request, recipe_id: str, data: RecipeIn):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
