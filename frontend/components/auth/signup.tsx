@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import { signup } from '@/lib/actions/signup'
-import { SubmitButton } from "@/components/ui/submit-button"
+import { signup } from '@/lib/actions/auth'
 import { useToast } from "@/components/ui/use-toast"
 import useEffectAfterMount from "@/hooks/useEffectAfterMount"
 

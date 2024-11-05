@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import useEffectAfterMount from "@/hooks/useEffectAfterMount"
 
-import { login } from "@/lib/actions/login"
+import { login } from "@/lib/actions/auth"
 
 export const LoginForm = () => {
   const [state, action, pending] = useActionState(login, undefined)
